@@ -1,4 +1,5 @@
 
+
 /********************************************************************/
 /* Copyright (C) SSE-USTC, 2012-2013                                */
 /*                                                                  */
@@ -35,6 +36,10 @@ typedef struct LinkTableNode
     struct LinkTableNode * pNext;
 }tLinkTableNode;
 
+/*
+ * LinkTable Type
+ */
+typedef struct LinkTable tLinkTable;
 /*
  * Create a LinkTable
  */
