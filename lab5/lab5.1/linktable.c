@@ -26,14 +26,6 @@
 
 #include"linktable.h"
 
-/*
- * Create a LinkTable
- */
-
-
-/*
- * LinkTable Type
- */
 typedef struct LinkTable
 {
     tLinkTableNode *pHead;
@@ -42,6 +34,10 @@ typedef struct LinkTable
     pthread_mutex_t mutex;
 }tLinkTable;
 
+
+/*
+ * Create a LinkTable
+ */
 tLinkTable * CreateLinkTable()
 {
     tLinkTable * pLinkTable = (tLinkTable *)malloc(sizeof(tLinkTable));
