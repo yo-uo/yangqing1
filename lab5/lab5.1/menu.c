@@ -16,7 +16,8 @@
  * Revision log:
  *
  * Created by yangqing, 2017/10/23
- *
+
+*
  */
 
 #include <stdio.h>
@@ -41,6 +42,29 @@ typedef struct DataNode
     char*   desc;
     int     (*handler)();
 } tDataNode;
+
+/*
+ * Search a LinkTableNode from LinkTable
+ * int Conditon(tLinkTableNode * pNode);
+ */
+tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode,void *args),void *args)
+{
+    if(pLinkTable == NULL || Conditon == NULL)
+    {
+        return NULL;
+    }
+    tLinkTableNode * pNode = pLinkTable->pHead;
+    while(pNode != NULL)
+    {    
+        if(Conditon(pNode,args) == SUCCESS)
+        {
+            return pNode;				    
+        }
+        pNode = pNode->pNext;
+    }
+    return NULL;
+}
+
 
 int SearchCondition(tLinkTableNode * pLinkTableNode)
 {
