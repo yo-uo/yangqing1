@@ -1,4 +1,5 @@
 
+
 /********************************************************************/
 /* Copyright (C) SSE-USTC, 2012-2013                                */
 /*                                                                  */
@@ -28,6 +29,19 @@
 /*
  * Create a LinkTable
  */
+
+
+/*
+ * LinkTable Type
+ */
+typedef struct LinkTable
+{
+    tLinkTableNode *pHead;
+    tLinkTableNode *pTail;
+    int			SumOfNode;
+    pthread_mutex_t mutex;
+}tLinkTable;
+
 tLinkTable * CreateLinkTable()
 {
     tLinkTable * pLinkTable = (tLinkTable *)malloc(sizeof(tLinkTable));
