@@ -149,27 +149,7 @@ int DelLinkTableNode(tLinkTable *pLinkTable,tLinkTableNode * pNode)
     return FAILURE;		
 }
 
-/*
- * Search a LinkTableNode from LinkTable
- * int Conditon(tLinkTableNode * pNode);
- */
-tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable, int Conditon(tLinkTableNode * pNode))
-{
-    if(pLinkTable == NULL || Conditon == NULL)
-    {
-        return NULL;
-    }
-    tLinkTableNode * pNode = pLinkTable->pHead;
-    while(pNode != NULL)
-    {    
-        if(Conditon(pNode) == SUCCESS)
-        {
-            return pNode;				    
-        }
-        pNode = pNode->pNext;
-    }
-    return NULL;
-}
+
 
 /*
  * get LinkTableHead
