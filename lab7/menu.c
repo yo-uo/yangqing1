@@ -22,9 +22,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "linktable.h"
+#include "menu.h"
 
-int Help();
+int Help(int argc,char *argv[]);
 
 #define CMD_MAX_LEN 128
 #define CMD_MAX_ARGV_LEN 128
@@ -42,8 +44,11 @@ typedef struct DataNode
     int     (*handler)(int argc,char *argv[]);
 }tDataNode;
 
-int SearchCondition(tLinkTableNode * pLinkTableNode)
+tLinkTable* head =NULL;
+
+int SearchCondition(tLinkTableNode * pLinkTableNode,void *args)
 {
+    char *cmd = (char*)args;
     tDataNode * pNode = (tDataNode *)pLinkTableNode;
     if(strcmp(pNode->cmd, cmd) == 0)
     {
@@ -55,7 +60,7 @@ int SearchCondition(tLinkTableNode * pLinkTableNode)
 /* find a cmd in the linklist and return the datanode pointer */
 tDataNode* FindCmd(tLinkTable * head, char * cmd)
 {
-    return  (tDataNode*)SearchLinkTableNode(head,SearchCondition);
+    return  (tDataNode*)SearchLinkTableNode(head,SearchCondition,(void *)cmd);
 }
 
 
@@ -71,31 +76,31 @@ int ShowAllCmd(tLinkTable * head)
     return 0;
 }
 
-int InitMenuData(tLinkTable ** ppLinktable)
+
+int MenuConfig(char *cmd,char *desc,int(*handler)(int argc, char *argv[]))
 {
-    *ppLinktable = CreateLinkTable();
-    tDataNode* pNode = (tDataNode*)malloc(sizeof(tDataNode));
-    pNode->cmd = "help";
-    pNode->desc = "Menu List:";
-    pNode->handler = Help;
-    AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
+    tDataNode* pNode = NULL;
+    if(head == NULL)
+    {
+        head = CreateLinkTable();
+        pNode = (tDataNode*)malloc(sizeof(tDataNode));
+        pNode->cmd = "help";
+        pNode->desc = "Menu List:";
+        pNode->handler = Help;
+        AddLinkTableNode(head,(tLinkTableNode *)pNode);
+    }
     pNode = (tDataNode*)malloc(sizeof(tDataNode));
-    pNode->cmd = "version";
-    pNode->desc = "Menu Program V1.0";
-    pNode->handler = NULL; 
-    AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
-    pNode = (tDataNode*)malloc(sizeof(tDataNode));
-    pNode->cmd = "quit";
-    pNode->desc = "Quit from Menu Program V1.0";
-    pNode->handler = Quit; 
-    AddLinkTableNode(*ppLinktable,(tLinkTableNode *)pNode);
- 
-    return 0; 
+    pNode->cmd = cmd;
+    pNode->desc = desc;
+    pNode->handler = handler; 
+    AddLinkTableNode(head,(tLinkTableNode *)pNode);
+   
+    return 0;
 }
 
 /* menu program */
 
-int ExcuteMenu()
+int ExecuteMenu()
 {
   
    /* cmd line begins */
@@ -111,12 +116,12 @@ int ExcuteMenu()
         {
             continue;
         }
-        pcmd = strtok(pcmd," ");
+        pcmd = strtok(pcmd,"");
         while(pcmd !=NULL && argc<CMD_MAX_ARGV_LEN)
         {
             argv[argc] = pcmd;
             argc++;
-            pcmd = strtok(NULL," ");
+            pcmd = strtok(NULL,"");
         } 
         if(argc == 1)
         {
@@ -138,9 +143,31 @@ int ExcuteMenu()
     }
 }
 
-int Help()
+int Help(int argc,char *argv[])
 {
-    ShowAllCmd(head);
-    return 0; 
+    int ch;
+    char* ch_prom;
+    if(argc == 1)
+    {
+        ShowAllCmd(head);
+        return 0;
+    }
+    while((ch = getopt(argc,argv,"sl:")) != -1)
+    {
+        switch(ch)
+        {
+            case 's':
+                printf("This is \" -h \" mode help\n");
+                ShowAllCmd(head);
+                break;
+            case 'l':
+                printf("This is \" -l\" mode help !!!\n");
+                ShowAllCmd(head);
+                break;
+        }
+    }
+    optind = 1;
+    return 0;
+   
 }
 

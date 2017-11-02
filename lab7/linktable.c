@@ -35,6 +35,25 @@ typedef struct LinkTable
 }tLinkTable;
 
 
+tLinkTableNode * SearchLinkTableNode(tLinkTable *pLinkTable,int Conditon(tLinkTableNode * pNode,void * args),void *args)
+{
+    if(pLinkTable == NULL || Conditon == NULL)
+    {
+        return NULL;
+    }
+    tLinkTableNode * pNode = pLinkTable->pHead;
+    while(pNode !=NULL)
+    {
+        if(Conditon(pNode,args) == SUCCESS)
+        {
+            return pNode;
+        }
+        pNode = pNode->pNext;
+    }
+    return NULL;
+}
+
+
 /*
  * Create a LinkTable
  */
